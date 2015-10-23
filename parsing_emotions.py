@@ -63,9 +63,12 @@ def classifyIntoSet(word, senti, flag):
 			negativeSet.add(word)
 	return;
 
+#Iterate through each line in the file and add the words to the sets
 for i in range(numLines):
 	toParse = linesInFile[i].split()
 	classifyIntoSet(toParse[0], toParse[1], toParse[2])
+
+emotionsFile.close()
 
 #print list(angerSet)
 #print list(anticipationSet)
@@ -77,5 +80,3 @@ for i in range(numLines):
 #print list(trustSet)
 #print list(positiveSet)
 #print list(negativeSet)
-
-emotionsFile.close()
