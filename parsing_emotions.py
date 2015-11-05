@@ -1,6 +1,8 @@
 #!/usr/bin/python
-
+import string
 import tweepy
+
+#global data
 
 # The consumer keys can be found on your application's Details
 # page located at https://dev.twitter.com/apps (under "OAuth settings")
@@ -15,6 +17,27 @@ access_token_secret="NDPVz04sjw0Vgn2xy9n7AnKRgkndJnEwSCVBDCmQfZHPq"
 
 tweettexts = []
 
+#Emotions
+angerSet = set()
+anticipationSet = set()
+disgustSet = set()
+fearSet = set()
+joySet = set()
+sadnessSet = set()
+surpriseSet = set()
+trustSet = set()
+#Overall Sentiments
+negativeSet = set()
+positiveSet = set()
+
+#array of counts
+counts = [0] * 8
+#array of sentiments
+sent_counts = [0] * 2
+
+############################################################################
+#Methods
+
 def get_five_tweets(screen_name, tweettexts):
   auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
   auth.secure = True
@@ -28,30 +51,6 @@ def get_five_tweets(screen_name, tweettexts):
   i=0
   for p in alltweets: 
     tweettexts.append(p.text)
-
-get_five_tweets("itsmeaditi_", tweettexts)
-print(tweettexts)
-
-
-emotionsFile = open("emotions.txt", "r")
-
-#Emotions
-angerSet = set()
-anticipationSet = set()
-disgustSet = set()
-fearSet = set()
-joySet = set()
-sadnessSet = set()
-surpriseSet = set()
-trustSet = set()
-
-#Overall Sentiments
-negativeSet = set()
-positiveSet = set()
-
-linesInFile = emotionsFile.readlines()
-
-numLines = len(linesInFile)
 
 def classifyIntoSet(word, senti, flag):
 	if senti == "anger":
@@ -96,20 +95,55 @@ def classifyIntoSet(word, senti, flag):
 	return;
 
 #Iterate through each line in the file and add the words to the sets
+def buildSets():
+	emotionsFile = open("emotions.txt", "r")
+	linesInFile = emotionsFile.readlines()
+	numLines = len(linesInFile)
+	for i in range(numLines):
+		toParse = linesInFile[i].split()
+		classifyIntoSet(toParse[0], toParse[1], toParse[2])
+	emotionsFile.close()
 
-for i in range(numLines):
-	toParse = linesInFile[i].split()
-	classifyIntoSet(toParse[0], toParse[1], toParse[2])
+def getCounts(tweettexts):
+	for i in range(len(tweettexts)):
+		toProcess = (tweettexts[i].split())
+		for j in range(len(toProcess)):
+			temp = toProcess[j].encode('ascii', 'ignore').lower().strip(string.punctuation)
+			if temp[0] == "#":
+				temp = temp[1:]
+			if temp[0] != "@":
+				print temp
+				if temp in angerSet:
+					counts[0] += 1
+				if temp in anticipationSet:
+					counts[1] += 1
+				if temp in disgustSet:
+					counts[2] += 1
+				if temp in fearSet:
+					counts[3] += 1
+				if temp in joySet:
+					counts[4] += 1
+				if temp in sadnessSet:
+					counts[5] += 1
+				if temp in surpriseSet:
+					counts[6] += 1
+				if temp in trustSet:
+					counts[7] += 1
+				if temp in positiveSet:
+					sent_counts[0] += 1
+				if temp in negativeSet:
+					sent_counts[1] += 1
+##########################################################################################
+#script code
 
-emotionsFile.close()
-
+buildSets()
 #print list(angerSet)
-#print list(anticipationSet)
-#print list(disgustSet)
-#print list(fearSet)
-#print list(joySet)
-#print list(sadnessSet)
-#print list(surpriseSet)
-#print list(trustSet)
-#print list(positiveSet)
-#print list(negativeSet)
+
+get_five_tweets("itsmeaditi_", tweettexts)
+#print(tweettexts)
+
+getCounts(tweettexts)
+#print list(counts)
+#print list(sent_counts)
+
+
