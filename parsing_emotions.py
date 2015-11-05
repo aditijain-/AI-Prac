@@ -13,7 +13,7 @@ consumer_secret="XOfwYzc7mD3RABGRuHWeD2z2rXqTtJt6FY474dKXcJj5nv8vDm"
 access_token="1337652349-nTJAw5CQWK7l1SJkD1XlOBcAqQbPeNRRi6JDyZ0"
 access_token_secret="NDPVz04sjw0Vgn2xy9n7AnKRgkndJnEwSCVBDCmQfZHPq"
 
-tweettexts = ()
+tweettexts = []
 
 def get_five_tweets(screen_name, tweettexts):
   auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
@@ -27,7 +27,7 @@ def get_five_tweets(screen_name, tweettexts):
   alltweets = api.user_timeline(screen_name = screen_name,count=5)
   i=0
   for p in alltweets: 
-    tweettexts = tweettexts + (p.text,)
+    tweettexts.append(p.text)
 
 get_five_tweets("itsmeaditi_", tweettexts)
 print(tweettexts)
