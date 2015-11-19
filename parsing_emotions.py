@@ -15,8 +15,6 @@ consumer_secret="XOfwYzc7mD3RABGRuHWeD2z2rXqTtJt6FY474dKXcJj5nv8vDm"
 access_token="1337652349-nTJAw5CQWK7l1SJkD1XlOBcAqQbPeNRRi6JDyZ0"
 access_token_secret="NDPVz04sjw0Vgn2xy9n7AnKRgkndJnEwSCVBDCmQfZHPq"
 
-tweettexts = []
-
 #Emotions
 angerSet = set()
 anticipationSet = set()
@@ -38,7 +36,8 @@ sent_counts = [0] * 2
 ############################################################################
 #Methods
 
-def get_five_tweets(screen_name, tweettexts):
+def get_five_tweets(screen_name):
+  tweettexts = []	
   auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
   auth.secure = True
   auth.set_access_token(access_token, access_token_secret)
@@ -51,6 +50,8 @@ def get_five_tweets(screen_name, tweettexts):
   i=0
   for p in alltweets: 
     tweettexts.append(p.text)
+
+  return tweettexts
 
 def classifyIntoSet(word, senti, flag):
 	if senti == "anger":
@@ -139,10 +140,10 @@ def getCounts(tweettexts):
 buildSets()
 #print list(angerSet)
 
-get_five_tweets("itsmeaditi_", tweettexts)
+tweets = get_five_tweets("itsmeaditi_")
 #print(tweettexts)
 
-getCounts(tweettexts)
+getCounts(tweets)
 #print list(counts)
 #print list(sent_counts)
 
