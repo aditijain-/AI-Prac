@@ -28,10 +28,9 @@ trustSet = set()
 negativeSet = set()
 positiveSet = set()
 
-#array of counts
-counts = [0] * 8
-#array of sentiments
-sent_counts = [0] * 2
+arr_of_emotions = [angerSet, anticipationSet, disgustSet, fearSet, joySet, 
+					sadnessSet, surpriseSet, trustSet]
+arr_of_sents = [negativeSet, positiveSet]
 
 ############################################################################
 #Methods
@@ -106,45 +105,60 @@ def buildSets():
 	emotionsFile.close()
 
 def getCounts(tweettexts):
+	#array of counts
+	counts = [0] * 8
+	#array of sentiments
+	sent_counts = [0] * 2
+
 	for i in range(len(tweettexts)):
 		toProcess = (tweettexts[i].split())
 		for j in range(len(toProcess)):
 			temp = toProcess[j].encode('ascii', 'ignore').lower().strip(string.punctuation)
-			if temp[0] == "#":
-				temp = temp[1:]
-			if temp[0] != "@":
-				print temp
-				if temp in angerSet:
-					counts[0] += 1
-				if temp in anticipationSet:
-					counts[1] += 1
-				if temp in disgustSet:
-					counts[2] += 1
-				if temp in fearSet:
-					counts[3] += 1
-				if temp in joySet:
-					counts[4] += 1
-				if temp in sadnessSet:
-					counts[5] += 1
-				if temp in surpriseSet:
-					counts[6] += 1
-				if temp in trustSet:
-					counts[7] += 1
-				if temp in positiveSet:
-					sent_counts[0] += 1
-				if temp in negativeSet:
-					sent_counts[1] += 1
+			#print temp
+			if temp != "":
+				if temp[0] == "#":
+					#print "here"
+					temp = temp[1:]
+				if temp[0] != "@":
+					#print temp
+					if temp in angerSet:
+						counts[0] += 1
+					if temp in anticipationSet:
+						counts[1] += 1
+					if temp in disgustSet:
+						counts[2] += 1
+					if temp in fearSet:
+						counts[3] += 1
+					if temp in joySet:
+						counts[4] += 1
+					if temp in sadnessSet:
+						counts[5] += 1
+					if temp in surpriseSet:
+						counts[6] += 1
+					if temp in trustSet:
+						counts[7] += 1
+					if temp in positiveSet:
+						sent_counts[0] += 1
+					if temp in negativeSet:
+						sent_counts[1] += 1
+
+		return (counts, sent_counts)
+
+def getMaxCount(counts):
+	e_max = max(counts)
+	return e_max
+
 ##########################################################################################
-#script code
+# #script code
 
-buildSets()
-#print list(angerSet)
+# buildSets()
+# #print list(angerSet)
 
-tweets = get_five_tweets("itsmeaditi_")
-#print(tweettexts)
+# tweets = get_five_tweets("itsmeaditi_")
+# #print(tweettexts)
 
-getCounts(tweets)
-#print list(counts)
-#print list(sent_counts)
+# getCounts(tweets)
+# #print list(counts)
+# #print list(sent_counts)
 
 
