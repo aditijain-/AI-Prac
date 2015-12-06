@@ -45,7 +45,9 @@ def getLyrics(artist, song):
 #print(getLyrics(a.name, result.title))
 
 def getMood(lyrics, mood_index, level):
-  assert level <= 5 and level >= 1
+  assert level >= 1
+  if level > 5:
+    level = 5
 
   it = iter(lyrics.splitlines())
   lines = []
@@ -65,25 +67,40 @@ def getSongForMood(mood, seed, level):
   artist = seed
   while True:
     song = getSong(artist)
-    lyrics = getLyrics(artist.name, song.title)
-    result = getMood(lyrics, mood, level)
-    if result == True:
-      return (song.title, artist.name)
-    else:
-      artist = getSimilarArtist(artist)
+    try:
+      lyrics = getLyrics(artist.name, song.title)
+      result = getMood(lyrics, mood, level)
+      if result == True:
+        return (song.title, artist.name)
+      else:
+        artist = getSimilarArtist(artist)
+    except:
+      #print("Oh no") 
+      pass
 
   return False
 
-def createPlaylists(mood, seed, level):
-  i = 1
+def createSimilarPlaylist(mood, song_set, level):
+  i = 0
+  new_ss = []
+  for s in song_set:
+    #print s
+    song = getSongForMood(mood, artist.Artist(s[1]), level)
+    new_ss.append(song)
+  return new_ss
+
+def createPlaylist(mood, level):
+  i = 5
   song_set = []
+  seed = getSeedArtist()
   while i > 0:
-    song = getSongForMood(mood, seed, level)
+    seed = getSeedArtist()
+    singer = getSimilarArtist(seed)
+    song = getSongForMood(mood, singer, level)
     song_set.append(song)
     i -= 1
 
   return song_set
-
 
 if __name__ == "__main__":
   parsing_emotions.buildSets()
@@ -96,9 +113,7 @@ if __name__ == "__main__":
 
   e_max = parsing_emotions.getMaxCount(e_counts)
 
-  seed_artist = getSeedArtist()
-
-  song_set = createPlaylists(e_max, seed_artist, 1)
+  song_set = createPlaylist(e_max, 1)
   print song_set
 
   #print list(counts)
